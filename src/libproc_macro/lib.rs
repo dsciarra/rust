@@ -308,7 +308,7 @@ impl Span {
     #[unstable(feature = "proc_macro_span", issue = "38356")]
     pub fn original_source_file(&self) -> OriginalSourceFile {
         OriginalSourceFile {
-            filemap: __internal::lookup_char_pos(self.0.lo()).file,
+            source_file: __internal::lookup_char_pos(self.0.lo()).file,
         }
     }
 
@@ -419,7 +419,7 @@ impl !Sync for LineColumn {}
 #[unstable(feature = "proc_macro_span", issue = "38356")]
 #[derive(Clone)]
 pub struct OriginalSourceFile {
-    filemap: Lrc<SourceFile>,
+    source_file: Lrc<SourceFile>,
 }
 
 #[unstable(feature = "proc_macro_span", issue = "38356")]
@@ -440,9 +440,9 @@ impl OriginalSourceFile {
     /// [`is_real`]: #method.is_real
     #[unstable(feature = "proc_macro_span", issue = "38356")]
     pub fn path(&self) -> PathBuf {
-        match self.filemap.name {
+        match self.source_file.name {
             FileName::Real(ref path) => path.clone(),
-            _ => PathBuf::from(self.filemap.name.to_string())
+            _ => PathBuf::from(self.source_file.name.to_string())
         }
     }
 
@@ -453,7 +453,7 @@ impl OriginalSourceFile {
         // This is a hack until intercrate spans are implemented and we can have real source files
         // for spans generated in external macros.
         // https://github.com/rust-lang/rust/pull/43604#issuecomment-333334368
-        self.filemap.is_real_file()
+        self.source_file.is_real_file()
     }
 }
 
@@ -471,7 +471,7 @@ impl fmt::Debug for OriginalSourceFile {
 #[unstable(feature = "proc_macro_span", issue = "38356")]
 impl PartialEq for OriginalSourceFile {
     fn eq(&self, other: &Self) -> bool {
-        Lrc::ptr_eq(&self.filemap, &other.filemap)
+        Lrc::ptr_eq(&self.source_file, &other.source_file)
     }
 }
 
