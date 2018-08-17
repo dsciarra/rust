@@ -63,7 +63,7 @@ use syntax::errors::DiagnosticBuilder;
 use syntax::parse::{self, token};
 use syntax::symbol::Symbol;
 use syntax::tokenstream;
-use syntax_pos::{FileMap, Pos, FileName};
+use syntax_pos::{SourceFile, Pos, FileName};
 
 /// The main type provided by this crate, representing an abstract stream of
 /// tokens, or, more specifically, a sequence of token trees.
@@ -419,7 +419,7 @@ impl !Sync for LineColumn {}
 #[unstable(feature = "proc_macro_span", issue = "38356")]
 #[derive(Clone)]
 pub struct OriginalSourceFile {
-    filemap: Lrc<FileMap>,
+    filemap: Lrc<SourceFile>,
 }
 
 #[unstable(feature = "proc_macro_span", issue = "38356")]
